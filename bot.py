@@ -7,11 +7,10 @@ import says
 import helper
 import re
 
-dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env")) # Of course, replace by your correct path
-os.environ.update(dotenv)
+#dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env")) # Of course, replace by your correct path
+#os.environ.update(dotenv)
 
-
-DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+DISCORD_TOKEN = os.getenv("BOTBRUNODISCORDTOKEN")
 
 bot = discord.Client()
 bot = commands.Bot(command_prefix="$")
