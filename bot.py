@@ -25,14 +25,15 @@ async def on_message(message):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 	url = re.findall(regex,message.content)
 
-	if url.size() > 0:
+	if len(url) > 0:
 		spamNumber += 2
 	for x in spamKeyWordsList:
 		if x in messageUpper:
 			spamNumber = spamNumber + 1;
-	if spamNumber >= 4:
+	if spamNumber >= 5:
 		await message.delete()
-
+	else:
+		await bot.process_commands(message)
 
 @bot.command()
 async def ping(ctx):
