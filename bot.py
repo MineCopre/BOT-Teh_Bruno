@@ -1,20 +1,38 @@
 import discord
 import os
-from dotenv import load_dotenv
+from dotenv import Dotenv
 from discord.ext import commands
 import gifs
 import says
 import helper
+import re
 
-load_dotenv()
+dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env")) # Of course, replace by your correct path
+os.environ.update(dotenv)
 
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot = discord.Client()
 bot = commands.Bot(command_prefix="$")
+spamKeyWordsList = ["3 MONTHS:", "3 MONTHS", "NITRO", "DISCORD", "GIFT", "GIFTS"]
 
-#print("running")
+@bot.event
+async def on_message(message):
+	spamNumber = 0
+	messageUpper = message.content.upper()
+
+	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+	url = re.findall(regex,message.content)
+
+	if url.size() > 0:
+		spamNumber += 2
+	for x in spamKeyWordsList:
+		if x in messageUpper:
+			spamNumber = spamNumber + 1;
+	if spamNumber >= 4:
+		await message.delete()
+
 
 @bot.command()
 async def ping(ctx):
@@ -35,6 +53,10 @@ async def jjdiz(ctx):
 	await ctx.channel.send(embed=e)
 
 @bot.command()
+async def apaga(ctx):
+    print(ctx)
+
+@bot.command()
 async def ajuda(ctx):
 	await ctx.channel.send(embed=helper.help())
 
@@ -43,3 +65,4 @@ async def equipa(ctx):
 	await ctx.channel.send(embed=helper.team())
 
 bot.run(DISCORD_TOKEN)
+    
