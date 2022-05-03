@@ -1,27 +1,28 @@
 import discord
 import os
-from dotenv import Dotenv
+import sudo
 from discord.ext import commands
 import gifs
 import says
 import helper
 import re
 
-#dotenv = Dotenv(os.path.join(os.path.dirname(__file__), ".env")) # Of course, replace by your correct path
-#os.environ.update(dotenv)
 
 DISCORD_TOKEN = os.getenv("BOTBRUNODISCORDTOKEN")
 
+
 bot = discord.Client()
 bot = commands.Bot(command_prefix="$")
-spamKeyWordsList = ["3 MONTHS:", "3 MONTHS", "NITRO", "DISCORD", "GIFT", "GIFTS"]
+spamKeyWordsList = ["3 MONTHS:", "3 MONTHS", "3 month", "NITRO", "DISCORD", "GIFT", "GIFTS", "STEAM"]
 
 @bot.event
 async def on_message(message):
+    
 	spamNumber = 0
 	messageUpper = message.content.upper()
 
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    
 	url = re.findall(regex,message.content)
 
 	if len(url) > 0:
@@ -31,6 +32,10 @@ async def on_message(message):
 			spamNumber = spamNumber + 1;
 	if spamNumber >= 5:
 		await message.delete()
+
+		##Get logs channel and report spam
+		logsChannel = bot.get_channel(818279209255305216)
+		await logsChannel.send("Spam detetado e apagdo em " + message.channel.name+ " , enviado por " + message.author.display_name)
 	else:
 		await bot.process_commands(message)
 
@@ -64,5 +69,6 @@ async def ajuda(ctx):
 async def equipa(ctx):
 	await ctx.channel.send(embed=helper.team())
 
+#sudo.setup(bot)
 bot.run(DISCORD_TOKEN)
     
